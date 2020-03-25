@@ -1,0 +1,3 @@
+[submodule "GAN_explorator/LinearExplorator"]
+	path = GAN_explorator/LinearExplorator
+	url = https://github.com/EPFL-LGG/LinearExplorator.git
