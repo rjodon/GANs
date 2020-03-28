@@ -1,6 +1,20 @@
 """
-note: don't forget to configure plaidml and select the device you want to use to run your model on (CPU, GPU...)
-      It can be achieved using the command plaidml-setup in a terminal with your virtual environnement activated.
+Brief
+-----
+    This is a generic implemetation of Generative Adversial Network (GAN).
+    
+Details
+-------
+    See more and refs are givi: https://en.wikipedia.org/wiki/Generative_adversarial_network
+
+Note
+----
+    Don't forget to configure plaidml and select the device you want to use to run your model on (CPU, GPU...)
+    It can be achieved using the command plaidml-setup in a terminal with your virtual environnement activated.
+      
+    - compare you different devices, it is not guaranteed that your GPU beats the CPU.
+    - plaidml support experimental drivers, though results are likely to be not correct.
+
 """
 import os
 os.environ["KERAS_BACKEND"] = "plaidml.keras.backend"
@@ -64,6 +78,7 @@ class GAN:
         self.combined.compile(loss='binary_crossentropy', optimizer=optimizer)
 
     def build_generator(self):
+        """ Build the generator """
 
         model = Sequential()
 
@@ -87,6 +102,7 @@ class GAN:
         return Model(noise, generator_output)
 
     def build_discriminator(self):
+        """ Build the discrimator """
 
         model = Sequential()
 
@@ -104,7 +120,16 @@ class GAN:
         return Model(r, validity)
 
     def train(self, epochs, batch_size=128, sample_interval=50):
+        """
+        Trains the GAN
         
+        Parameters
+        ----------
+        epochs int
+        batch_size int
+        sample_interval int
+
+        """
         # Normalise values between -1 and 1
         self.x_train = self.x_train / 127.5 - 1.
         #self.x_train = np.expand_dims(self.x_train, axis=3)
@@ -192,5 +217,5 @@ if __name__ == '__main__':
     # Define and run the GAN training
    
     gan = GAN(x_train=x_train, n_samples=n_samples, latente_dim=100)
-    # gan.train(epochs=EPOCHS, batch_size=BATCH_SIZE, sample_interval=SAMPLE_INTERVAL)
+    gan.train(epochs=EPOCHS, batch_size=BATCH_SIZE, sample_interval=SAMPLE_INTERVAL)
     gan.make_video()
